@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import puppeteer from 'puppeteer'
-import type { Browser } from 'puppeteer'
+import chrome from 'chrome-aws-lambda'
+import puppeteer from 'puppeteer-core'
+import type { Browser } from 'puppeteer-core'
 
 export async function getAmazonItem(browser: Browser, url: string) {
   const page = await browser.newPage()
@@ -52,7 +53,11 @@ export default async function handler(
       const filteredUrls = urls.filter((url) =>
         url.includes(`https://www.amazon.co.jp/dp/`)
       )
-      const browser = await puppeteer.launch()
+      const browser = await puppeteer.launch({
+        args: chrome.args,
+        executablePath: await chrome.executablePath,
+        headless: chrome.headless,
+      })
 
       const promise = filteredUrls.map(async (url) => {
         return getAmazonItem(browser, url)

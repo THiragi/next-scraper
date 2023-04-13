@@ -12,11 +12,12 @@
     "@types/node": "18.15.11",
     "@types/react": "18.0.35",
     "@types/react-dom": "18.0.11",
+    "chrome-aws-lambda": "^10.1.0",
     "eslint": "8.38.0",
     "eslint-config-next": "13.3.0",
     "next": "13.3.0",
     "open-graph-scraper": "^5.2.3",
-    "puppeteer": "^19.8.5",
+    "puppeteer-core": "^19.8.5",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "typescript": "5.0.4"
