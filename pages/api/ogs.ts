@@ -46,8 +46,7 @@ export default async function handler(
       if (headers['x-api-key'] !== process.env.API_KEY_OGS) {
         res.status(404).end('invalid api key')
       }
-      const urls: string[] =
-        body?.urls && typeof body.urls === 'string' ? body.urls.split(',') : []
+      const urls: string[] = Array.isArray(body.urls) ? body.urls : []
 
       const result = await Promise.all(
         urls.map(async (url) => {
