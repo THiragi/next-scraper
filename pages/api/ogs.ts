@@ -1,30 +1,43 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import openGraphScraper from 'open-graph-scraper'
 
-export function getDomainFromUrl(url: string) {
+function getDomainFromUrl(url: string) {
   const match = url.match(
     /^(?:https?:\/\/)?(?:[^@\n]+@)?(?:www\.)?([^:/\n?=]+)/im
   )
   return match ? match[1] : undefined
 }
 
-export async function getOgData(url: string) {
+async function getOgData(url: string) {
   const options = { url, onlyGetOpenGraphInfo: true }
   return openGraphScraper(options).then((data) => {
-    const { success, ogUrl, ogDescription, ogTitle, ogImage } = data.result
+    const {
+      success,
+      ogUrl,
+      ogDescription,
+      ogTitle,
+      ogSiteName,
+      ogImage,
+      twitterImage,
+    } = data.result
     const domain = ogUrl ? getDomainFromUrl(ogUrl) : ''
     const image = Array.isArray(ogImage)
       ? ogImage[0]
       : typeof ogImage === 'string'
       ? undefined
       : ogImage
+    const twitterOgImage = Array.isArray(twitterImage)
+      ? twitterImage[0]
+      : typeof twitterImage === 'string'
+      ? undefined
+      : twitterImage
     return {
       success,
-      url: ogUrl ?? '',
+      url: ogUrl ?? url,
       domain,
-      title: ogTitle ?? '',
-      description: ogDescription ?? '',
-      ogImageSrc: image?.url ?? '',
+      title: ogTitle ?? ogSiteName ?? domain,
+      description: ogDescription ?? url,
+      ogImageSrc: image?.url ?? twitterOgImage?.url,
     }
   })
 }
@@ -46,7 +59,9 @@ export default async function handler(
       if (headers['x-api-key'] !== process.env.API_KEY_OGS) {
         res.status(404).end('invalid api key')
       }
-      const urls: string[] = Array.isArray(body.urls) ? body.urls : []
+      const urls: string[] = Array.isArray(body.urls)
+        ? body.urls
+        : ['https://www.ableton.com/', 'https://www.nin.com/']
 
       const result = await Promise.all(
         urls.map(async (url) => {
