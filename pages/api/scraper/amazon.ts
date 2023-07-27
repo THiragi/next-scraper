@@ -50,7 +50,7 @@ export default async function handler(
         return getAmazonItem(url)
       })
       const result = await Promise.all(promise)
-
+      res.setHeader('Cache-Control', 's-maxage=86400')
       res.status(200).json({ result })
       break
     default:

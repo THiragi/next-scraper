@@ -66,7 +66,7 @@ export default async function handler(
           return getOgData(url)
         })
       )
-
+      res.setHeader('Cache-Control', 's-maxage=86400')
       res.status(200).json({ result })
       break
     default:
