@@ -71,11 +71,11 @@ export default async function handler(
 ) {
   const { method, headers, body } = req;
 
-  if (headers['Secret-Token'] !== process.env.SECRET_TOKEN) {
+  if (headers['secret-token'] !== process.env.SECRET_TOKEN) {
     res.status(404).end(`${headers['Secret-Token']}`);
   }
 
-  if (headers['Content-Type']?.includes('application/json')) {
+  if (headers['content-type']?.includes('application/json')) {
     res.status(404).end('invalid content type');
   }
 
