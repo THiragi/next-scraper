@@ -75,7 +75,7 @@ export default async function handler(
     res.status(404).end('invalid secret token');
   }
 
-  if (headers['content-type']?.includes('application/json')) {
+  if (headers['Content-Type']?.includes('application/json')) {
     res.status(404).end('invalid content type');
   }
 
