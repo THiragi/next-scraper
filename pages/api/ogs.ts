@@ -75,7 +75,7 @@ export default async function handler(
     res.status(404).end(`${headers['Secret-Token']}`);
   }
 
-  if (headers['content-type']?.includes('application/json')) {
+  if (!headers['content-type']?.includes('application/json')) {
     res.status(404).end('invalid content type');
   }
 
