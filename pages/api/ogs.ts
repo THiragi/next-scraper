@@ -71,12 +71,16 @@ export default async function handler(
 ) {
   const { method, headers, body } = req;
 
-  if (
-    headers['Secret-Token'] !== process.env.SECRET_TOKEN ||
-    headers['content-type']?.includes('application/json') ||
-    method !== 'POST'
-  ) {
-    res.status(404).end('invalid request');
+  if (headers['Secret-Token'] !== process.env.SECRET_TOKEN) {
+    res.status(404).end('invalid secret token');
+  }
+
+  if (headers['content-type']?.includes('application/json')) {
+    res.status(404).end('invalid content type');
+  }
+
+  if (method !== 'POST') {
+    res.status(404).end('invalid http method');
   }
 
   const urls: string[] = isStringArray(body.urls) ? body.urls : [];
